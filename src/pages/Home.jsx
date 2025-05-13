@@ -10,14 +10,16 @@ import Booking from '../components/Booking'
 const Home = () => {
   return (
     <>
-      <Hero />
+    <div className='pt-10n'><Hero /></div>
+      
       <About />
       <Services />
       <Team />
       <Gallery />
       <Testimonials />
-      <Contact />
       <Booking />
+            <Contact />
+
     </>
   )
 }

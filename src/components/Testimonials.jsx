@@ -1,88 +1,206 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { FaQuoteLeft, FaStar, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+
+const TestimonialSeparator = () => (
+  <div className="flex items-center justify-center py-10">
+    <div className="h-0.5 w-16 bg-gray-700"></div>
+    <div className="mx-4">
+      <div className="h-2 w-2 bg-primary rotate-45"></div>
+    </div>
+    <div className="h-0.5 w-16 bg-gray-700"></div>
+  </div>
+)
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [direction, setDirection] = useState(0) // -1 for left, 1 for right
+  
+  // Auto-rotate testimonials
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide()
+    }, 8000)
+    
+    return () => clearInterval(interval)
+  }, [currentIndex])
   
   const testimonials = [
     {
       name: "Emma Thompson",
       image: "/images/testimonial-1.jpg",
       text: "I've been coming to Hair Hacker for over a year now, and I'm always thrilled with the results. The stylists are true professionals who listen to what you want and deliver every time. Highly recommend!",
-      rating: 5
+      rating: 5,
+      role: "Regular Client"
     },
     {
       name: "David Rodriguez",
       image: "/images/testimonial-2.jpg",
       text: "The atmosphere at Hair Hacker is so welcoming and relaxing. My haircut was exactly what I wanted, and the head massage during the wash was an unexpected bonus. This salon really goes above and beyond.",
-      rating: 5
+      rating: 5,
+      role: "First-time Visitor"
     },
     {
       name: "Sarah Johnson",
       image: "/images/testimonial-3.jpg",
       text: "I recently had a facial treatment at Hair Hacker and my skin has never looked better! The esthetician was knowledgeable and personalized the treatment to address my specific concerns. I've already booked my next appointment!",
-      rating: 4
+      rating: 4,
+      role: "Spa Client"
     }
   ]
   
   const nextSlide = () => {
+    setDirection(1)
     setCurrentIndex((prevIndex) => (prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1))
   }
   
   const prevSlide = () => {
+    setDirection(-1)
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1))
+  }
+
+  const variants = {
+    enter: (direction) => {
+      return {
+        x: direction > 0 ? 1000 : -1000,
+        opacity: 0
+      }
+    },
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => {
+      return {
+        x: direction < 0 ? 1000 : -1000,
+        opacity: 0
+      }
+    }
   }
   
   return (
-    <section id="testimonials" className="py-20 bg-white">
-      <div className="container">
+    <section id="testimonials" className="bg-black text-white py-20">
+      <TestimonialSeparator />
+      
+      <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <span className="section-subtitle">Testimonials</span>
-          <h2 className="section-title">What Our Clients Say</h2>
-          <p className="max-w-3xl mx-auto text-gray-600">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-block text-primary font-medium mb-2"
+          >
+            TESTIMONIALS
+          </motion.span>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-3xl md:text-4xl font-bold mb-4"
+          >
+            What Our Clients Say
+          </motion.h2>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="h-1 w-20 bg-primary mx-auto mb-6"
+          />
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="max-w-3xl mx-auto text-gray-400"
+          >
             Don't just take our word for it. Here's what our valued clients have to say about their experiences.
-          </p>
+          </motion.p>
         </div>
         
         <div className="max-w-4xl mx-auto relative">
-          <div className="bg-light p-8 md:p-12 rounded-lg shadow-md">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden flex-shrink-0">
-                <img 
-                  src={testimonials[currentIndex].image} 
-                  alt={testimonials[currentIndex].name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <FaQuoteLeft className="text-primary opacity-20 text-4xl mb-4" />
-                <p className="text-gray-600 italic mb-6">{testimonials[currentIndex].text}</p>
-                <div className="flex items-center mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <FaStar 
-                      key={i}
-                      className={`${i < testimonials[currentIndex].rating ? 'text-yellow-400' : 'text-gray-300'} text-lg`}
-                    />
-                  ))}
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={currentIndex}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="bg-gray-900 p-8 md:p-12 rounded-lg shadow-xl"
+            >
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary p-1"
+                >
+                  <img 
+                    src={testimonials[currentIndex].image} 
+                    alt={testimonials[currentIndex].name}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </motion.div>
+                <div className="flex-1">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <FaQuoteLeft className="text-primary text-4xl mb-4" />
+                    <p className="text-gray-300 italic mb-6 text-lg">{testimonials[currentIndex].text}</p>
+                    
+                    <div className="flex items-center mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar 
+                          key={i}
+                          className={`${i < testimonials[currentIndex].rating ? 'text-yellow-400' : 'text-gray-700'} text-lg`}
+                        />
+                      ))}
+                    </div>
+                    
+                    <h4 className="font-serif text-xl font-semibold text-white">{testimonials[currentIndex].name}</h4>
+                    <p className="text-primary">{testimonials[currentIndex].role}</p>
+                  </motion.div>
                 </div>
-                <h4 className="font-serif text-lg font-semibold">{testimonials[currentIndex].name}</h4>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
           
           <div className="flex justify-center mt-8 gap-4">
-            <button 
-              className="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300"
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-12 h-12 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300"
               onClick={prevSlide}
             >
               <FaChevronLeft />
-            </button>
-            <button 
-              className="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300"
+            </motion.button>
+            
+            <motion.div className="flex gap-2 items-center">
+              {testimonials.map((_, index) => (
+                <motion.button 
+                  key={index}
+                  className={`w-2 h-2 rounded-full ${currentIndex === index ? 'bg-primary' : 'bg-gray-700'}`}
+                  onClick={() => {
+                    setDirection(index > currentIndex ? 1 : -1)
+                    setCurrentIndex(index)
+                  }}
+                />
+              ))}
+            </motion.div>
+            
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="w-12 h-12 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300"
               onClick={nextSlide}
             >
               <FaChevronRight />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
