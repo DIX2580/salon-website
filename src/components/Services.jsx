@@ -23,7 +23,7 @@ const ServicesCard = ({ service, index }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="  "
+      className="relative bg-gray-800 rounded-xl overflow-hidden  "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -319,9 +319,9 @@ const Services = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           ></motion.div>
           <p className="max-w-2xl mx-auto text-gray-300 text-lg">
-            Discover our comprehensive range of professional hair and beauty services 
+            Discover our  comprehensive range of professional hair and beauty services 
             at Radiance Unisex Salon, where we blend traditional Indian techniques with 
-            modern styling to help you look and feel extraordinary.
+            modern styling to help you look and feel extraordinary. 
           </p>
         </motion.div>
         
