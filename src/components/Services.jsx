@@ -23,11 +23,11 @@ const ServicesCard = ({ service, index }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative bg-gray-800 rounded-xl overflow-hidden shadow-lg group border border-gray-700"
+      className="  "
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative h-64 overflow-hidden">
+      <div className="relative h-64 rounded-[20px] overflow-hidden">
         <img
           src={service.image}
           alt={service.title}
@@ -178,7 +178,7 @@ const Services = () => {
       icon: <FaCut className="text-3xl" />,
       title: "Haircuts & Styling",
       description: "Premium haircuts and styling services by master stylists to give you a perfect look.",
-      image: "/api/placeholder/600/400",
+      image: "	https://i.pinimg.com/736x/7d/76/2e/7d762e98bbd81d86d3903fc7ffb8ec72.jpg",
       features: ["Precision Cuts", "Trending Styles", "Blowouts", "Hair Spa"],
       category: ['men', 'women']
     },
@@ -186,7 +186,7 @@ const Services = () => {
       icon: <FaPaintBrush className="text-3xl" />,
       title: "Hair Coloring",
       description: "Express yourself with vibrant colors, subtle highlights, or natural-looking shades.",
-      image: "/api/placeholder/600/400",
+      image: "https://i.pinimg.com/736x/d1/6c/d8/d16cd84b76ad6eb6f47a7a8eb052051f.jpg",
       features: ["Global Color", "Balayage", "Highlights", "Fashion Colors"],
       category: ['men', 'women']
     },
@@ -194,7 +194,7 @@ const Services = () => {
       icon: <FaMale className="text-3xl" />,
       title: "Men's Grooming",
       description: "Premium grooming services tailored specifically for men's needs and style preferences.",
-      image: "/api/placeholder/600/400",
+      image: "https://i.pinimg.com/736x/3a/ec/da/3aecda79a4c250e0bb1c33f5dfd4163e.jpg",
       features: ["Beard Styling", "Shaving", "Hair Tattoo", "Hair Bonding"],
       category: ['men']
     },
@@ -202,7 +202,7 @@ const Services = () => {
       icon: <FaFemale className="text-3xl" />,
       title: "Women's Services",
       description: "Complete beauty solutions designed especially for women's unique beauty requirements.",
-      image: "/api/placeholder/600/400", 
+      image: "https://i.pinimg.com/736x/20/83/0c/20830c201f99b2615e61d54a7d48c702.jpg", 
       features: ["Keratin Treatment", "Hair Extensions", "Perming", "Smoothening"],
       category: ['women']
     },
@@ -210,7 +210,7 @@ const Services = () => {
       icon: <FaSpa className="text-3xl" />,
       title: "Facial Treatments",
       description: "Rejuvenate your skin with our premium facials tailored to your skin type and concerns.",
-      image: "/api/placeholder/600/400",
+      image: "	https://i.pinimg.com/736x/33/a2/cd/33a2cd275cb11daf3e6c24551d7d3658.jpg",
       features: ["Gold Facial", "Diamond Facial", "Anti-Aging", "Hydrating"],
       category: ['men', 'women', 'spa']
     },
@@ -218,7 +218,7 @@ const Services = () => {
       icon: <FaHands className="text-3xl" />,
       title: "Nail Services",
       description: "Complete your look with beautiful nails, from classic designs to creative nail art.",
-      image: "/api/placeholder/600/400",
+      image: "	https://i.pinimg.com/736x/20/e4/ca/20e4ca45873b7c3d776d71d537aa717c.jpg",
       features: ["Gel Polish", "Nail Art", "Spa Pedicure", "Paraffin Treatment"],
       category: ['men', 'women']
     },
@@ -226,7 +226,7 @@ const Services = () => {
       icon: <FaRing className="text-3xl" />,
       title: "Bridal Packages",
       description: "Comprehensive bridal beauty solutions to make your special day truly unforgettable.",
-      image: "/api/placeholder/600/400",
+      image: "	https://i.pinimg.com/736x/ac/a4/9d/aca49db963144a4d1f753b738532b446.jpg",
       features: ["HD Makeup", "Pre-Bridal Treatments", "Mehendi", "Hairstyling"],
       category: ['women', 'bridal']
     },
@@ -234,7 +234,7 @@ const Services = () => {
       icon: <FaLeaf className="text-3xl" />,
       title: "Ayurvedic Treatments",
       description: "Traditional Indian wellness therapies using natural herbs and ancient techniques.",
-      image: "/api/placeholder/600/400",
+      image: "	https://i.pinimg.com/736x/cd/71/f1/cd71f156f2460ba4aee5ca6ae4348be9.jpg",
       features: ["Head Massage", "Body Polishing", "Herbal Facials", "Hot Oil Treatment"],
       category: ['men', 'women', 'spa']
     },
