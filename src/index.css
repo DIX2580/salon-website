@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .font-inter {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-inter text-dark bg-light;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-playfair;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all duration-300 inline-block;
+  }
+  .btn-secondary {
+    @apply bg-transparent border border-primary text-primary px-6 py-3 rounded hover:bg-primary hover:text-white transition-all duration-300 inline-block;
+  }
+  .section-title {
+    @apply font-playfair text-3xl md:text-4xl font-medium mb-2 relative;
+  }
+  .section-subtitle {
+    @apply text-accent uppercase tracking-widest text-sm mb-8;
+  }
+  .container {
+    @apply max-w-7xl mx-auto px-4;
+  }
+}
