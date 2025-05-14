@@ -127,7 +127,7 @@ const VideoBackground = () => {
             pointerEvents: 'none', // Prevents interaction with the video
           }}
         >
-          <source src="/public/videoplayback (1).mp4" type="video/mp4" />
+          <source src="/videoplayback.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
