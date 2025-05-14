@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { motion, AnimatePresence, useAnimation, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -12,10 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   const sectionRef = useRef(null);
-  const canvasRef = useRef(null);
   const textRefs = useRef([]);
   const imageRefs = useRef([]);
-  const sceneRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   
   // Add refs to the array
@@ -31,170 +25,33 @@ const About = () => {
     }
   };
 
-  // Enhanced Three.js background effect
+  // Framer Motion particles setup
+  const generateParticles = (count) => {
+    return Array.from({ length: count }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 4 + 1,
+      duration: 15 + Math.random() * 15,
+      delay: Math.random() * 10,
+      color: i % 4 === 0 ? '#9c27b0' : i % 4 === 1 ? '#e91e63' : i % 4 === 2 ? '#3f51b5' : '#01579b'
+    }));
+  };
+  
+  const particles = generateParticles(100);
+  const backgroundControls = useAnimation();
+  
+  // Animate background with Framer Motion
   useEffect(() => {
-    let scene, camera, renderer, particles, composer;
-    let animationFrameId;
-    let mouseX = 0;
-    let mouseY = 0;
-    
-    // Mouse move handler for interactive background
-    const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    const initThree = () => {
-      // Scene setup
-      scene = new THREE.Scene();
-      sceneRef.current = scene;
-      
-      // Create camera with wider FOV for dramatic effect
-      camera = new THREE.PerspectiveCamera(
-        90,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.z = 3.5;
-      
-      // Create renderer with enhanced settings
-      renderer = new THREE.WebGLRenderer({
-        canvas: canvasRef.current,
-        alpha: true,
-        antialias: true
-      });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      
-      // Create particles system for background - modified for unisex salon aesthetic
-      const particlesGeometry = new THREE.BufferGeometry();
-      const particlesCount = 2500;
-      
-      const posArray = new Float32Array(particlesCount * 3);
-      const scaleArray = new Float32Array(particlesCount);
-      const colorArray = new Float32Array(particlesCount * 3);
-      
-      // Create custom color palette for particles
-      const colorPalette = [
-        new THREE.Color('#9c27b0').toArray(), // Purple
-        new THREE.Color('#e91e63').toArray(), // Pink
-        new THREE.Color('#3f51b5').toArray(), // Indigo
-        new THREE.Color('#01579b').toArray(), // Dark Blue
-      ];
-      
-      for (let i = 0; i < particlesCount * 3; i += 3) {
-        // Create a structured field of particles with more interesting distribution
-        posArray[i] = (Math.random() - 0.5) * 20;
-        posArray[i + 1] = (Math.random() - 0.5) * 20;
-        posArray[i + 2] = (Math.random() - 0.5) * 15;
-        
-        // Vary the particle sizes with more pronounced variation
-        scaleArray[i/3] = Math.random() * 2;
-        
-        // Assign random colors from palette
-        const randomColor = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-        colorArray[i] = randomColor[0];
-        colorArray[i + 1] = randomColor[1];
-        colorArray[i + 2] = randomColor[2];
+    backgroundControls.start({
+      opacity: [0.5, 0.7, 0.5],
+      transition: {
+        duration: 5,
+        repeat: Infinity,
+        repeatType: "reverse",
+        ease: "easeInOut"
       }
-      
-      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-      particlesGeometry.setAttribute('scale', new THREE.BufferAttribute(scaleArray, 1));
-      particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-      
-      // Create material with custom shader for more advanced look
-      const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.03,
-        transparent: true,
-        opacity: 0.7,
-        blending: THREE.AdditiveBlending,
-        sizeAttenuation: true,
-        vertexColors: true
-      });
-      
-      particles = new THREE.Points(particlesGeometry, particlesMaterial);
-      scene.add(particles);
-      
-      // Add some ambient light
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
-      
-      // Add directional light for depth
-      const directionalLight = new THREE.DirectionalLight(0x3f51b5, 0.4);
-      directionalLight.position.set(1, 1, 1);
-      scene.add(directionalLight);
-      
-      // Setup post-processing for bloom effect
-      const renderScene = new RenderPass(scene, camera);
-      
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(window.innerWidth, window.innerHeight),
-        0.7,  // Strength
-        0.5,  // Radius
-        0.7   // Threshold
-      );
-      
-      composer = new EffectComposer(renderer);
-      composer.addPass(renderScene);
-      composer.addPass(bloomPass);
-      
-      // Add window resize handler
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        composer.setSize(window.innerWidth, window.innerHeight);
-      });
-    };
-    
-    // Enhanced animation loop
-    const animate = () => {
-      // Enhanced responsive animation to mouse position
-      particles.rotation.y += 0.0007;
-      particles.rotation.x += 0.0003;
-      
-      // More dynamic sway effect based on mouse position
-      particles.position.x += (mouseX * 0.08 - particles.position.x) * 0.02;
-      particles.position.y += (-mouseY * 0.08 - particles.position.y) * 0.02;
-      
-      // Enhanced pulse effect
-      const time = Date.now() * 0.0005;
-      particles.material.size = 0.03 + Math.sin(time) * 0.01;
-      
-      // Wave effect through the particles
-      const positions = particles.geometry.attributes.position.array;
-      for (let i = 0; i < positions.length; i += 3) {
-        positions[i + 2] += Math.sin((time + positions[i] * 0.1) * 0.5) * 0.01;
-      }
-      particles.geometry.attributes.position.needsUpdate = true;
-      
-      // Use composer for rendering with post-processing
-      composer.render();
-      animationFrameId = window.requestAnimationFrame(animate);
-    };
-    
-    // Initialize and clean up
-    if (canvasRef.current) {
-      initThree();
-      animate();
-    }
-    
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('mousemove', handleMouseMove);
-      
-      if (particles) {
-        particles.geometry.dispose();
-        particles.material.dispose();
-      }
-      
-      // Clean up any other resources
-      scene.clear();
-      renderer.dispose();
-    };
+    });
   }, []);
 
   // GSAP enhanced animations  
@@ -274,6 +131,12 @@ const About = () => {
 
   // React Spring animation for hoverable cards - replaced with Framer Motion
   const [hoverCard, setHoverCard] = useState(null);
+  
+  // Scroll-based animations with Framer Motion
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [0.8, 1]);
+  const y = useTransform(scrollYProgress, [0, 0.2], [100, 0]);
 
   // Animation variants for Framer Motion - enhanced
   const cardVariants = {
@@ -321,65 +184,155 @@ const About = () => {
       }
     }
   };
+  
+  // Framer Motion background variants
+  const backgroundVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 0.6,
+      transition: {
+        duration: 1.5
+      }
+    }
+  };
+  
+  // Diagonal lines animations
+  const lineVariants = {
+    initial: (i) => ({
+      left: '-20%',
+      top: `${Math.random() * 100}%`,
+      rotate: -5 + Math.random() * 10,
+    }),
+    animate: {
+      left: '100%',
+      transition: {
+        duration: index => 15 + Math.random() * 20,
+        repeat: Infinity,
+        ease: "linear"
+      }
+    }
+  };
 
   return (
-    <section 
+    <motion.section 
       id="about" 
       ref={sectionRef}
       className="relative py-32 overflow-hidden min-h-screen flex items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
     >
-      {/* Three.js Background Canvas */}
-      <canvas 
-        ref={canvasRef} 
-        className="absolute inset-0 w-full h-full -z-10" 
-        style={{ opacity: 0.6 }}
-      />
+      {/* Framer Motion Animated Background with particles */}
+      <motion.div 
+        className="absolute inset-0 -z-10" 
+        initial="hidden"
+        animate="visible"
+        variants={backgroundVariants}
+      >
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute rounded-full"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              backgroundColor: particle.color,
+            }}
+            animate={{
+              x: [0, Math.random() * 100 - 50, 0],
+              y: [0, Math.random() * 100 - 50, 0],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1, 0],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+      </motion.div>
       
       {/* Dark theme background with gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#121212] to-[#1a1a1a] -z-20" />
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#121212] to-[#1a1a1a] -z-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2 }}
+      />
       
       {/* Additional gradient overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-0 opacity-90" />
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-0 opacity-90"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.9 }}
+        transition={{ duration: 1.5, delay: 0.3 }}
+      />
       
       {/* Subtle grid overlay for depth */}
-      <div 
+      <motion.div 
         className="absolute inset-0 bg-[url('/grid.png')] bg-repeat opacity-5 z-0"
         style={{ backgroundSize: '30px 30px' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05 }}
+        transition={{ duration: 2 }}
       />
       
       {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-40 z-0" />
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        transition={{ duration: 1.8, delay: 0.2 }}
+      />
       
-      {/* Accent light effects */}
-      <div className="absolute top-1/4 -left-12 w-72 h-72 bg-primary opacity-5 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-1/4 -right-12 w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl -z-10" />
+      {/* Accent light effects with Framer Motion */}
+      <motion.div 
+        className="absolute top-1/4 -left-12 w-72 h-72 bg-primary rounded-full blur-3xl -z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05, scale: [0.8, 1.1, 0.8] }}
+        transition={{ 
+          opacity: { duration: 2 },
+          scale: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
       
-      {/* Animated diagonal lines */}
+      <motion.div 
+        className="absolute bottom-1/4 -right-12 w-96 h-96 bg-primary rounded-full blur-3xl -z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05, scale: [1, 0.8, 1] }}
+        transition={{ 
+          opacity: { duration: 2 },
+          scale: { duration: 10, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
+      
+      {/* Animated diagonal lines with Framer Motion */}
       <div className="absolute inset-0 overflow-hidden z-0 opacity-10">
         {[...Array(10)].map((_, i) => (
           <motion.div 
             key={i}
             className="absolute h-px bg-gradient-to-r from-transparent via-primary to-transparent"
             style={{
-              top: `${Math.random() * 100}%`,
-              left: '-20%',
               width: '140%',
-              transform: `rotate(${-5 + Math.random() * 10}deg)`,
             }}
-            animate={{
-              left: ['-20%', '100%'],
-            }}
-            transition={{
-              duration: 15 + Math.random() * 20,
-              repeat: Infinity,
-              delay: Math.random() * 10,
-              ease: "linear"
-            }}
+            custom={i}
+            variants={lineVariants}
+            initial="initial"
+            animate="animate"
           />
         ))}
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <motion.div 
+        className="container mx-auto px-4 relative z-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.5 }}
+      >
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div className="space-y-8">
             <div ref={addToTextRefs} className="mb-4">
@@ -393,22 +346,29 @@ const About = () => {
                 className="inline-block relative"
               >
                 {/* About Us text with animated gradient background */}
-                <span className="px-6 py-2 rounded-full text-white font-medium tracking-wider flex items-center space-x-2 relative overflow-hidden">
-                  <span className="absolute inset-0 bg-primary opacity-90 rounded-full"></span>
-                  <span className="absolute inset-0 bg-primary opacity-90 rounded-full"
-                    style={{
-                      animation: "gradientShift 3s linear infinite"
-                    }}
-                  ></span>
-                  <style jsx>{`
-                    @keyframes gradientShift {
-                      0% { transform: translateX(-100%); }
-                      100% { transform: translateX(100%); }
-                    }
-                  `}</style>
-                  <span className="w-2 h-2 bg-white rounded-full inline-block animate-pulse mr-2 relative z-10"></span>
+                <motion.span 
+                  className="px-6 py-2 rounded-full text-white font-medium tracking-wider flex items-center space-x-2 relative overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <motion.span 
+                    className="absolute inset-0 bg-primary rounded-full"
+                    animate={{ opacity: [0.8, 0.95, 0.8] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                  <motion.span 
+                    className="absolute inset-0 bg-primary rounded-full"
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    style={{ opacity: 0.9 }}
+                  />
+                  <motion.span 
+                    className="w-2 h-2 bg-white rounded-full inline-block mr-2 relative z-10"
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
                   <span className="relative z-10">ABOUT US</span>
-                </span>
+                </motion.span>
                 
                 {/* Tooltip with information */}
                 <motion.div
@@ -422,31 +382,49 @@ const About = () => {
               </motion.div>
             </div>
             
-            <h2 ref={addToTextRefs} className="font-serif text-5xl md:text-6xl font-bold mb-8 leading-tight text-white">
+            <motion.h2 
+              ref={addToTextRefs} 
+              className="font-serif text-5xl md:text-6xl font-bold mb-8 leading-tight text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               Your Style <span className="text-primary inline-block relative">
                 Sanctuary
                 <motion.span 
-                  className="absolute -bottom-2 left-0 w-full h-1 bg-primary"
+                  className="absolute -bottom-2 left-0 h-1 bg-primary"
                   initial={{ width: 0 }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 0.8, delay: 0.3 }}
                   viewport={{ once: true }}
                 />
               </span> For Everyone
-            </h2>
+            </motion.h2>
             
-            <p ref={addToTextRefs} className="text-gray-300 leading-relaxed text-lg">
+            <motion.p 
+              ref={addToTextRefs} 
+              className="text-gray-300 leading-relaxed text-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               Style Studio is more than just a salon; it's a sanctuary where beauty and personal style converge for all.
               Founded with the vision to provide exceptional hair and beauty services in a welcoming atmosphere,
               we've been helping clients of all genders express their unique identity for over a decade.
-            </p>
+            </motion.p>
             
-            <p ref={addToTextRefs} className="text-gray-300 leading-relaxed text-lg">
+            <motion.p 
+              ref={addToTextRefs} 
+              className="text-gray-300 leading-relaxed text-lg"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               Our diverse team of highly skilled stylists and beauty therapists are passionate about their craft
               and committed to staying at the forefront of the latest trends and techniques.
               We believe in personalized care that celebrates individuality, using only premium products
               that deliver outstanding results while caring for your hair and skin.
-            </p>
+            </motion.p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-8">
               <motion.div 
@@ -455,17 +433,31 @@ const About = () => {
                 whileInView="visible"
                 whileHover="hover"
                 viewport={{ once: true }}
-                className="bg-black/50 backdrop-blur-lg p-7 rounded-xl border-l-4 border-primary shadow-lg shadow-primary/10 transform transition-all duration-300"
+                className="bg-black/50 backdrop-blur-lg p-7 rounded-xl border-l-4 border-primary shadow-lg shadow-primary/10"
               >
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4">
+                  <motion.div 
+                    className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4"
+                    whileHover={{ rotate: 180 }}
+                    transition={{ duration: 0.6 }}
+                  >
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
-                  </div>
-                  <h3 className="font-serif text-2xl font-semibold text-white">Expert Stylists</h3>
+                  </motion.div>
+                  <motion.h3 
+                    className="font-serif text-2xl font-semibold text-white"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    Expert Stylists
+                  </motion.h3>
                 </div>
-                <motion.p variants={textVariants} className="text-gray-300 pl-16">
+                <motion.p 
+                  variants={textVariants} 
+                  className="text-gray-300 pl-16"
+                >
                   A diverse team of professionals creating perfect looks for everyone
                 </motion.p>
               </motion.div>
@@ -477,15 +469,28 @@ const About = () => {
                 whileHover="hover"
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="bg-black/50 backdrop-blur-lg p-7 rounded-xl border-l-4 border-primary shadow-lg shadow-primary/10 transform transition-all duration-300"
+                className="bg-black/50 backdrop-blur-lg p-7 rounded-xl border-l-4 border-primary shadow-lg shadow-primary/10"
               >
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4">
+                  <motion.div 
+                    className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4"
+                    animate={{ 
+                      boxShadow: ['0 0 0 0 rgba(156, 39, 176, 0)', '0 0 0 10px rgba(156, 39, 176, 0.1)', '0 0 0 0 rgba(156, 39, 176, 0)'] 
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                  </div>
-                  <h3 className="font-serif text-2xl font-semibold text-white">Premium Products</h3>
+                  </motion.div>
+                  <motion.h3 
+                    className="font-serif text-2xl font-semibold text-white"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    Premium Products
+                  </motion.h3>
                 </div>
                 <motion.p variants={textVariants} className="text-gray-300 pl-16">
                   Using only high-quality products for all hair and skin types
@@ -530,19 +535,36 @@ const About = () => {
                 className="group overflow-hidden rounded-2xl shadow-xl shadow-black/50 border border-primary/10 relative"
               >
                 <div className="relative">
-                  <img
+                  <motion.img
                     src="/hair2.png"
                     alt="Unisex salon interior"
-                    className="w-full h-52 object-cover transition-all duration-700 transform group-hover:scale-110"
+                    className="w-full h-52 object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.7 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"
+                    initial={{ opacity: 0.6 }}
+                    whileHover={{ opacity: 0.4 }}
+                    transition={{ duration: 0.3 }}
+                  />
                   
                   {/* Animated overlay on hover */}
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-primary/20"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 0.6 }}
+                    transition={{ duration: 0.5 }}
+                  />
                   
-                  <div className="absolute bottom-0 left-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <motion.div 
+                    className="absolute bottom-0 left-0 p-4"
+                    initial={{ y: "100%" }}
+                    whileHover={{ y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <h4 className="text-white font-medium">Modern Space</h4>
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
               
@@ -555,19 +577,36 @@ const About = () => {
                 className="group overflow-hidden rounded-2xl shadow-xl shadow-black/50 border border-primary/10 relative"
               >
                 <div className="relative">
-                  <img
+                  <motion.img
                     src="/hair.jpg"
                     alt="Hair styling"
-                    className="w-full h-64 object-cover transition-all duration-700 transform group-hover:scale-110"
+                    className="w-full h-64 object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.7 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"
+                    initial={{ opacity: 0.6 }}
+                    whileHover={{ opacity: 0.4 }}
+                    transition={{ duration: 0.3 }}
+                  />
                   
                   {/* Animated overlay on hover */}
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-primary/20"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 0.6 }}
+                    transition={{ duration: 0.5 }}
+                  />
                   
-                  <div className="absolute bottom-0 left-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <motion.div 
+                    className="absolute bottom-0 left-0 p-4"
+                    initial={{ y: "100%" }}
+                    whileHover={{ y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <h4 className="text-white font-medium">Inclusive Styling</h4>
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
@@ -582,19 +621,36 @@ const About = () => {
                 className="group overflow-hidden rounded-2xl shadow-xl shadow-black/50 border border-primary/10 relative"
               >
                 <div className="relative">
-                  <img
+                  <motion.img
                     src="/hair3.png"
                     alt="Unisex beauty treatments"
-                    className="w-full h-96 object-cover transition-all duration-700 transform group-hover:scale-110"
+                    className="w-full h-96 object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.7 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"
+                    initial={{ opacity: 0.6 }}
+                    whileHover={{ opacity: 0.4 }}
+                    transition={{ duration: 0.3 }}
+                  />
                   
                   {/* Animated overlay on hover */}
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+                  <motion.div 
+                    className="absolute inset-0 bg-primary/20"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 0.6 }}
+                    transition={{ duration: 0.5 }}
+                  />
                   
-                  <div className="absolute bottom-0 left-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                  <motion.div 
+                    className="absolute bottom-0 left-0 p-4"
+                    initial={{ y: "100%" }}
+                    whileHover={{ y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <h4 className="text-white font-medium">Premium Treatments</h4>
-                  </div>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
@@ -615,45 +671,51 @@ const About = () => {
               className="absolute -bottom-8 -right-8 md:-right-16 w-40 h-40 bg-black/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-primary/30 flex items-center justify-center p-3 z-20"
             >
               {/* Animated gradient background */}
-              <div className="absolute inset-0 bg-primary/20"></div>
-              <div 
-                className="absolute inset-0 opacity-30"
+              <motion.div 
+                className="absolute inset-0 bg-primary/20"
+                animate={{ opacity: [0.1, 0.3, 0.1] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <motion.div 
+                className="absolute inset-0"
+                animate={{ opacity: [0.1, 0.4, 0.1] }}
+                transition={{ duration: 4, repeat: Infinity }}
                 style={{
                   background: "radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%)",
-                  animation: "pulseGlow 4s ease-in-out infinite"
                 }}
-              >
-                <style jsx>{`
-                  @keyframes pulseGlow {
-                    0%, 100% { opacity: 0.1; }
-                    50% { opacity: 0.4; }
-                  }
-                `}</style>
-              </div>
+              />
               
               <div className="text-center relative z-10">
-                <h4 className="text-primary inline-block font-semibold mb-1">9+ Years</h4>
+                <motion.h4 
+                  className="text-primary inline-block font-semibold mb-1"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  9+ Years
+                </motion.h4>
                 <p className="text-sm text-gray-300">of Excellence</p>
-                <div className="w-12 h-1 bg-primary mx-auto mt-2"></div>
+                <motion.div 
+                  className="w-12 h-1 bg-primary mx-auto mt-2"
+                  animate={{ width: [12, 48, 12] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
               </div>
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
       
-      {/* Enhanced floating particles for additional depth */}
+      {/* Enhanced floating particles for additional depth with Framer Motion */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full"
+            className="absolute rounded-full text-primary"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               width: `${Math.random() * 4 + 1}px`,
               height: `${Math.random() * 4 + 1}px`,
-              background: i % 2 === 0 ? 'currentColor' : 'currentColor',
-              className: "text-primary"
             }}
             animate={{
               y: [0, -120, 0],
@@ -669,34 +731,38 @@ const About = () => {
         ))}
       </div>
       
-      {/* Enhanced scroll indicator */}
-      <motion.div 
+      {/* Enhanced scroll indicator with Framer Motion */}
+<motion.div 
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-        animate={{
-          y: [0, 10, 0],
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.2 }}
       >
-        <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex justify-center p-1">
+        <p className="text-gray-400 text-sm mb-2">Scroll down</p>
+        <motion.div 
+          animate={{ 
+            y: [0, 10, 0],
+            opacity: [0.4, 1, 0.4]
+          }}
+          transition={{ 
+            duration: 1.5, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          className="w-5 h-10 border-2 border-gray-400 rounded-full flex justify-center"
+        >
           <motion.div 
-            className="w-1 bg-primary rounded-full"
-            animate={{
-              height: ["20%", "60%", "20%"],
-            }}
-            transition={{
-              duration: 1.5,
+            animate={{ y: [0, 15, 0] }}
+            transition={{ 
+              duration: 1.5, 
               repeat: Infinity,
-              repeatType: "reverse",
+              ease: "easeInOut" 
             }}
+            className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5"
           />
-        </div>
-        <span className="text-primary/70 text-xs mt-2">Scroll for more</span>
+        </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 };
 

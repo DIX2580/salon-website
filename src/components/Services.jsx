@@ -57,7 +57,7 @@ const ServicesCard = ({ service, index }) => {
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: isHovered ? '80px' : '40px' }}
-              className="h-1 bg-purple-500 mt-2 rounded-full"
+              className="h-1 bg-primary mt-2 rounded-full"
               transition={{ duration: 0.3 }}
             ></motion.div>
           </div>
@@ -68,8 +68,8 @@ const ServicesCard = ({ service, index }) => {
           animate={{ scale: isHovered ? 1.2 : 1, rotate: isHovered ? 10 : 0 }}
           transition={{ duration: 0.3, type: "spring" }}
         >
-          <div className="w-14 h-14 rounded-full bg-gray-900 bg-opacity-90 flex items-center justify-center shadow-lg border border-purple-500">
-            <div className="text-purple-400">{service.icon}</div>
+          <div className="w-14 h-14 rounded-full bg-gray-900 bg-opacity-90 stroke-slate-200 flex items-center justify-center shadow-lg border border-white">
+            <div className="text-primary ">{service.icon}</div>
           </div>
         </motion.div>
       </div>
@@ -114,7 +114,7 @@ const ServicesCard = ({ service, index }) => {
         
         <motion.div
           whileHover={{ x: 5 }}
-          className="inline-flex items-center justify-center text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+          className="inline-flex items-center justify-center text-sm font-medium text-primary hover:text-purple-300 transition-colors"
         >
           Explore Details
           <FaChevronRight className="ml-1 text-xs" />
@@ -304,16 +304,39 @@ const Services = () => {
           transition={{ duration: 0.7 }}
         >
           <motion.span 
-            className="text-sm font-medium tracking-wider uppercase text-purple-300 mb-3 inline-block px-4 py-1 bg-purple-900 bg-opacity-50 rounded-full"
+            className="text-sm font-medium tracking-wider uppercase text-purple-300 mb-3 inline-block px-4 py-1 bg-primary bg-opacity-50 rounded-full"
             whileHover={{ scale: 1.05 }}
           >
-            Luxury Beauty Experience
+               <motion.span 
+                  className="px-6 py-2 rounded-full text-white font-medium tracking-wider flex items-center space-x-2 relative overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <motion.span 
+                    className="absolute inset-0 bg-primary rounded-full"
+                    animate={{ opacity: [0.8, 0.95, 0.8] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                  <motion.span 
+                    className="absolute inset-0 bg-primary rounded-full"
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    style={{ opacity: 0.9 }}
+                  />
+                  <motion.span 
+                    className="w-2 h-2 bg-white rounded-full inline-block mr-2 relative z-10"
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                  <span className="relative z-10"> Luxury Beauty Experience</span>
+                </motion.span>
+           
           </motion.span>
-          <h2 className="text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-pink-300">
+          <h2 className="text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-black">
             Premium Beauty Services
           </h2>
           <motion.div 
-            className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-400 mx-auto mb-8 rounded-full"
+            className="w-24 h-1 bg-gradient-to-r from-primary to-pink-400 mx-auto mb-8 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: animateHeader ? "6rem" : 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -333,7 +356,7 @@ const Services = () => {
               onClick={() => setSelectedCategory(category.id)}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 selectedCategory === category.id 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-primary to-black text-white shadow-lg' 
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700 shadow'
               }`}
               whileHover={{ scale: 1.05 }}
@@ -360,14 +383,15 @@ const Services = () => {
           transition={{ duration: 0.5, delay: 0.8 }}
         >
           <motion.button 
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            className="px-8 py-4 btn-primary duration-300"
             whileHover={{ 
               scale: 1.05,
               boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.4), 0 8px 10px -6px rgba(139, 92, 246, 0.3)"
             }}
             whileTap={{ scale: 0.98 }}
           >
-            Book Your Appointment Now
+            <a href="/booking ">            Book Your Appointment Now
+</a>
           </motion.button>
         </motion.div>
       </div>

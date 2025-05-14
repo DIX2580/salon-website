@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { FaCalendarAlt, FaClock, FaUser } from 'react-icons/fa'
 
 const Booking = () => {
   const [step, setStep] = useState(1)
@@ -43,34 +42,17 @@ const Booking = () => {
     })
   }
   
-  const handleServiceSelection = (serviceId) => {
+  const handleSelection = (field, value) => {
     setBookingData({
       ...bookingData,
-      service: serviceId
-    })
-  }
-  
-  const handleStylistSelection = (stylistId) => {
-    setBookingData({
-      ...bookingData,
-      stylist: stylistId
-    })
-  }
-  
-  const handleTimeSelection = (time) => {
-    setBookingData({
-      ...bookingData,
-      time: time
+      [field]: value
     })
   }
   
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle form submission here
     console.log(bookingData)
-    // Show success message
-    alert('Thank you for booking with us! We look forward to seeing you soon.')
-    // Reset form
+    alert('Your appointment has been booked successfully! You will receive a confirmation email shortly.')
     setBookingData({
       service: '',
       stylist: '',
@@ -83,263 +65,335 @@ const Booking = () => {
     })
     setStep(1)
   }
+
+  // Get selected item names
+  const getSelectedService = () => services.find(s => s.id === bookingData.service) || {}
+  const getSelectedStylist = () => stylists.find(s => s.id === bookingData.stylist) || {}
   
+  // Validate current step
+  const isStepComplete = () => {
+    switch(step) {
+      case 1: return bookingData.service !== ''
+      case 2: return bookingData.stylist !== ''
+      case 3: return bookingData.date !== '' && bookingData.time !== ''
+      default: return true
+    }
+  }
+
+  // Navigation
   const nextStep = () => {
-    setStep(step + 1)
+    if (step < 4 && isStepComplete()) {
+      setStep(step + 1)
+      window.scrollTo(0, 0)
+    }
   }
   
   const prevStep = () => {
-    setStep(step - 1)
+    if (step > 1) {
+      setStep(step - 1)
+      window.scrollTo(0, 0)
+    }
   }
-  
+
   return (
-    <section id="booking" className="py-20 bg-white">
-      <div className="container max-w-4xl">
-        <div className="text-center mb-16">
-          <span className="section-subtitle">Book an Appointment</span>
-          <h2 className="section-title">Schedule Your Visit</h2>
-          <p className="max-w-3xl mx-auto text-gray-600">
-            Ready to experience our exceptional salon services? Schedule your appointment in a few simple steps.
+    <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl w-full">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-5xl font-bold text-transparent text-primary bg-clip-text bg-gradient-to-r from-primary to-white">
+            Book Your Appointment
+          </h1>
+          <p className="mt-3 text-gray-400 max-w-2xl mx-auto">
+            Complete the steps below to schedule your salon experience
           </p>
         </div>
-        
-        <div className="bg-light p-8 rounded-lg shadow-md">
-          {/* Progress Steps */}
-          <div className="flex justify-between mb-12 relative">
-            <div className="w-full absolute top-1/2 h-0.5 bg-gray-300 -translate-y-1/2 z-0"></div>
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="relative z-10 flex flex-col items-center">
+
+        {/* Main Form Card */}
+        <div className="bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl border border-zinc-800">
+          {/* Progress Bar */}
+          <div className="bg-zinc-800 h-1 w-full">
+            <div 
+              className="bg-gradient-to-r from-amber-600 via-amber-500 to-primary h-full transition-all duration-500 ease-out"
+              style={{ width: `${(step / 4) * 100}%` }}
+            ></div>
+          </div>
+
+          {/* Steps */}
+          <div className="flex border-b border-zinc-800">
+            {['Select Service', 'Choose Stylist', 'Schedule', 'Your Details'].map((label, idx) => {
+              const stepNum = idx + 1
+              return (
                 <div 
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    step >= item ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
+                  key={stepNum}
+                  className={`flex-1 py-4 px-2 text-center transition-all duration-300 ${
+                    step === stepNum ? 'border-b-2 border-amber-500 text-white' : 'text-gray-500'
                   }`}
                 >
-                  {item}
+                  <div className="flex items-center justify-center">
+                    <div className={`
+                      w-8 h-8 rounded-full flex items-center justify-center text-sm mr-2 
+                      ${step >= stepNum ? 'bg-gradient-to-r from-primary to-black text-white' : 'bg-zinc-800 text-gray-500'}
+                    `}>
+                      {stepNum}
+                    </div>
+                    <span className="hidden sm:inline">{label}</span>
+                  </div>
                 </div>
-                <span className={`mt-2 text-sm ${step >= item ? 'text-primary' : 'text-gray-600'}`}>
-                  {item === 1 ? 'Select Service' : item === 2 ? 'Choose Date & Time' : 'Your Details'}
-                </span>
-              </div>
-            ))}
+              )
+            })}
           </div>
-          
-          {/* Step 1: Select Service & Stylist */}
-          {step === 1 && (
-            <div>
-              <h3 className="font-serif text-xl font-semibold mb-6">Select a Service</h3>
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                {services.map((service) => (
-                  <div 
-                    key={service.id}
-                    className={`border p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                      bookingData.service === service.id 
-                        ? 'border-primary bg-primary bg-opacity-5' 
-                        : 'border-gray-200 hover:border-primary'
-                    }`}
-                    onClick={() => handleServiceSelection(service.id)}
-                  >
-                    <h4 className="font-medium mb-2">{service.name}</h4>
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>{service.duration}</span>
-                      <span>{service.price}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <h3 className="font-serif text-xl font-semibold mb-6">Choose a Stylist</h3>
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                {stylists.map((stylist) => (
-                  <div 
-                    key={stylist.id}
-                    className={`border p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                      bookingData.stylist === stylist.id 
-                        ? 'border-primary bg-primary bg-opacity-5' 
-                        : 'border-gray-200 hover:border-primary'
-                    }`}
-                    onClick={() => handleStylistSelection(stylist.id)}
-                  >
-                    <h4 className="font-medium mb-2">{stylist.name}</h4>
-                    <div className="text-sm text-gray-600">
-                      <span>Specialties: {stylist.specialties.join(', ')}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="flex justify-end">
-                <button 
-                  className="btn-primary"
-                  onClick={nextStep}
-                  disabled={!bookingData.service || !bookingData.stylist}
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {/* Step 2: Choose Date & Time */}
-          {step === 2 && (
-            <div>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="font-serif text-xl font-semibold mb-6 flex items-center">
-                    <FaCalendarAlt className="mr-2 text-primary" /> Select a Date
-                  </h3>
-                  <input
-                    type="date"
-                    name="date"
-                    value={bookingData.date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <h3 className="font-serif text-xl font-semibold mb-6 flex items-center">
-                    <FaClock className="mr-2 text-primary" /> Select a Time
-                  </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {timeSlots.map((time) => (
-                      <div 
-                        key={time}
-                        className={`border p-2 rounded text-center cursor-pointer transition-all duration-300 ${
-                          bookingData.time === time 
-                            ? 'border-primary bg-primary bg-opacity-5 text-primary' 
-                            : 'border-gray-200 hover:border-primary'
-                        }`}
-                        onClick={() => handleTimeSelection(time)}
-                      >
-                        {time}
+
+          {/* Content Area */}
+          <div className="p-8">
+            {/* Step 1: Service Selection */}
+            {step === 1 && (
+              <div className="animate-fadeIn">
+                <h2 className="text-2xl font-bold mb-6">Select Your Service</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {services.map(service => (
+                    <div
+                      key={service.id}
+                      onClick={() => handleSelection('service', service.id)}
+                      className={`
+                        p-6 rounded-xl cursor-pointer transition-all duration-300
+                        ${bookingData.service === service.id 
+                          ? 'bg-gradient-to-br from-amber-900/40 to-yellow-900/40 border border-amber-500' 
+                          : 'bg-zinc-800/50 border border-zinc-700 hover:border-amber-500/50'}
+                      `}
+                    >
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-lg font-medium">{service.name}</h3>
+                        {bookingData.service === service.id && (
+                          <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex justify-between mt-4 text-sm">
+                        <span className="text-gray-400">{service.duration}</span>
+                        <span className="font-medium text-amber-400">{service.price}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              
-              <div className="flex justify-between mt-8">
-                <button 
-                  className="btn-secondary"
-                  onClick={prevStep}
-                >
-                  Back
-                </button>
-                <button 
-                  className="btn-primary"
-                  onClick={nextStep}
-                  disabled={!bookingData.date || !bookingData.time}
-                >
-                  Continue
-                </button>
+            )}
+
+            {/* Step 2: Stylist Selection */}
+            {step === 2 && (
+              <div className="animate-fadeIn">
+                <h2 className="text-2xl font-bold mb-6">Choose Your Stylist</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {stylists.map(stylist => (
+                    <div
+                      key={stylist.id}
+                      onClick={() => handleSelection('stylist', stylist.id)}
+                      className={`
+                        p-6 rounded-xl cursor-pointer transition-all duration-300 flex items-center
+                        ${bookingData.stylist === stylist.id 
+                          ? 'bg-gradient-to-br from-amber-900/40 to-yellow-900/40 border border-amber-500' 
+                          : 'bg-zinc-800/50 border border-zinc-700 hover:border-amber-500/50'}
+                      `}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-600 to-amber-400 flex items-center justify-center text-xl font-bold">
+                        {stylist.name.charAt(0)}
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <div className="flex justify-between">
+                          <h3 className="text-lg font-medium">{stylist.name}</h3>
+                          {bookingData.stylist === stylist.id && (
+                            <div className="w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {stylist.specialties.join(' • ')}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-          
-          {/* Step 3: Personal Details */}
-          {step === 3 && (
-            <div>
-              <h3 className="font-serif text-xl font-semibold mb-6 flex items-center">
-                <FaUser className="mr-2 text-primary" /> Your Information
-              </h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
+            )}
+
+            {/* Step 3: Date & Time */}
+            {step === 3 && (
+              <div className="animate-fadeIn">
+                <h2 className="text-2xl font-bold mb-6">Schedule Your Appointment</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div>
-                    <label htmlFor="name" className="block text-gray-700 mb-2">Full Name</label>
+                    <label className="block text-gray-400 mb-2 text-sm">Select Date</label>
                     <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={bookingData.name}
+                      type="date"
+                      name="date"
+                      value={bookingData.date}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Your name"
+                      className="w-full p-4 bg-zinc-800 border border-zinc-700 rounded-xl focus:outline-none focus:border-amber-500 text-white"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label htmlFor="email" className="block text-gray-700 mb-2">Email Address</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={bookingData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Your email"
-                      required
-                    />
+                    <label className="block text-gray-400 mb-2 text-sm">Select Time</label>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                      {timeSlots.map(time => (
+                        <div
+                          key={time}
+                          onClick={() => handleSelection('time', time)}
+                          className={`
+                            p-3 text-center rounded-lg cursor-pointer transition-all duration-300
+                            ${bookingData.time === time 
+                              ? 'bg-amber-500 text-white' 
+                              : 'bg-zinc-800 border border-zinc-700 hover:border-amber-500/50'}
+                          `}
+                        >
+                          {time}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Personal Details */}
+            {step === 4 && (
+              <div className="animate-fadeIn">
+                <h2 className="text-2xl font-bold mb-6">Complete Your Booking</h2>
+                
+                <div className="bg-zinc-800/50 p-6 rounded-xl mb-8 border border-zinc-700">
+                  <h3 className="text-lg font-medium mb-4">Booking Summary</h3>
+                  <div className="grid grid-cols-2 gap-y-3">
+                    <div className="text-gray-400">Service:</div>
+                    <div>{getSelectedService().name}</div>
+                    
+                    <div className="text-gray-400">Stylist:</div>
+                    <div>{getSelectedStylist().name}</div>
+                    
+                    <div className="text-gray-400">Date:</div>
+                    <div>{bookingData.date}</div>
+                    
+                    <div className="text-gray-400">Time:</div>
+                    <div>{bookingData.time}</div>
+                    
+                    <div className="text-gray-400">Estimated Price:</div>
+                    <div>{getSelectedService().price}</div>
                   </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="phone" className="block text-gray-700 mb-2">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={bookingData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Your phone number"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="notes" className="block text-gray-700 mb-2">Special Requests (Optional)</label>
-                  <textarea
-                    id="notes"
-                    name="notes"
-                    value={bookingData.notes}
-                    onChange={handleChange}
-                    rows="3"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Any special requests or notes for your appointment"
-                  ></textarea>
-                </div>
-                
-                <div className="bg-primary bg-opacity-5 border border-primary border-opacity-20 p-4 rounded-lg">
-                  <h4 className="font-serif text-lg font-semibold mb-2">Booking Summary</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-gray-600">Service:</div>
-                    <div className="font-medium">{services.find(s => s.id === bookingData.service)?.name}</div>
+                <form onSubmit={handleSubmit}>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-gray-400 mb-2 text-sm">Full Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={bookingData.name}
+                          onChange={handleChange}
+                          className="w-full p-4 bg-zinc-800 border border-zinc-700 rounded-xl focus:outline-none focus:border-amber-500 text-white"
+                          placeholder="Your name"
+                          required
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-gray-400 mb-2 text-sm">Email Address</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={bookingData.email}
+                          onChange={handleChange}
+                          className="w-full p-4 bg-zinc-800 border border-zinc-700 rounded-xl focus:outline-none focus:border-amber-500 text-white"
+                          placeholder="Your email"
+                          required
+                        />
+                      </div>
+                    </div>
                     
-                    <div className="text-gray-600">Stylist:</div>
-                    <div className="font-medium">{stylists.find(s => s.id === bookingData.stylist)?.name}</div>
+                    <div>
+                      <label className="block text-gray-400 mb-2 text-sm">Phone Number</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={bookingData.phone}
+                        onChange={handleChange}
+                        className="w-full p-4 bg-zinc-800 border border-zinc-700 rounded-xl focus:outline-none focus:border-amber-500 text-white"
+                        placeholder="Your phone number"
+                        required
+                      />
+                    </div>
                     
-                    <div className="text-gray-600">Date:</div>
-                    <div className="font-medium">{bookingData.date}</div>
+                    <div>
+                      <label className="block text-gray-400 mb-2 text-sm">Special Requests <span className="text-gray-500">(Optional)</span></label>
+                      <textarea
+                        name="notes"
+                        value={bookingData.notes}
+                        onChange={handleChange}
+                        rows="3"
+                        className="w-full p-4 bg-zinc-800 border border-zinc-700 rounded-xl focus:outline-none focus:border-amber-500 text-white"
+                        placeholder="Any special requests or notes"
+                      ></textarea>
+                    </div>
                     
-                    <div className="text-gray-600">Time:</div>
-                    <div className="font-medium">{bookingData.time}</div>
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        className="w-full p-4 bg-gradient-to-r from-amber-600 via-amber-500 to-primary rounded-xl text-white font-bold hover:opacity-90 transition-opacity"
+                      >
+                        Confirm Booking
+                      </button>
+                      <p className="text-gray-500 text-sm text-center mt-3">
+                        By confirming, you agree to our booking terms and policies
+                      </p>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex justify-between">
-                  <button 
-                    type="button"
-                    className="btn-secondary"
-                    onClick={prevStep}
-                  >
-                    Back
-                  </button>
-                  <button 
-                    type="submit"
-                    className="btn-primary"
-                  >
-                    Confirm Booking
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
+                </form>
+              </div>
+            )}
+          </div>
+
+          {/* Navigation */}
+          <div className="px-8 pb-8 pt-2 flex justify-between">
+            {step > 1 ? (
+              <button
+                onClick={prevStep}
+                className="px-6 py-3 border border-zinc-700 rounded-lg hover:bg-zinc-800 transition-colors"
+              >
+                Back
+              </button>
+            ) : (
+              <div></div>
+            )}
+            
+            {step < 4 && (
+              <button
+                onClick={nextStep}
+                disabled={!isStepComplete()}
+                className={`
+                  px-6 py-3 rounded-lg transition-all duration-300 font-medium
+                  ${isStepComplete() 
+                    ? 'bg-gradient-to-r from-amber-600 to-amber-400 text-white' 
+                    : 'bg-zinc-800 text-gray-500 cursor-not-allowed'}
+                `}
+              >
+                Continue
+              </button>
+            )}
+          </div>
+        </div>
+        
+        {/* Footer */}
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          <p>Need help? Contact us at <span className="text-amber-400">support@hairhacker.com</span></p>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 
