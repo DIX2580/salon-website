@@ -6,6 +6,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, Float, PerspectiveCamera } from '@react-three/drei';
 import { Suspense } from 'react';
 import * as THREE from 'three';
+import SpecialOffersPopup from './SpecialOffersPopup';
 
 // Animated floating particles in 3D space
 const Particles = ({ count = 100 }) => {
@@ -286,6 +287,8 @@ const Hero = () => {
         </motion.div>
       </div>
       
+      {/* Special Offers Popup */}
+      <SpecialOffersPopup />
     </section>
   );
 };
