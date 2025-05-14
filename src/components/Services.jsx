@@ -319,9 +319,9 @@ const Services = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           ></motion.div>
           <p className="max-w-2xl mx-auto text-gray-300 text-lg">
-            Discover our comprehensive range of professional hair and beauty services 
+            Discover our  comprehensive range of professional hair and beauty services 
             at Radiance Unisex Salon, where we blend traditional Indian techniques with 
-            modern styling to help you look and feel extraordinary.
+            modern styling to help you look and feel extraordinary. 
           </p>
         </motion.div>
         
