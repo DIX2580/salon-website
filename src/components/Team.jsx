@@ -11,7 +11,7 @@ const Team = () => {
       name: "Alex Morgan",
       role: "Founder & Master Stylist",
       bio: "Specializing in modern cuts and styling for all genders with over 15 years of experience.",
-      image: "/images/team-1.jpg",
+      image: "/st1.jpg",
       social: {
         instagram: "#",
         facebook: "#",

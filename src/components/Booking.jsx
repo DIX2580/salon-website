@@ -22,14 +22,29 @@ const Booking = () => {
   ? 'https://salon-website-backend.onrender.com/api'
   : 'http://localhost:5000/api'
 
-  const services = [
-    { id: 'haircut', name: 'Haircut & Styling', duration: '60 min', price: '$65+' },
-    { id: 'color', name: 'Hair Coloring', duration: '120 min', price: '$100+' },
-    { id: 'highlights', name: 'Highlights', duration: '150 min', price: '$120+' },
-    { id: 'facial', name: 'Facial Treatment', duration: '60 min', price: '$85+' },
-    { id: 'manicure', name: 'Manicure', duration: '45 min', price: '$40+' },
-    { id: 'pedicure', name: 'Pedicure', duration: '60 min', price: '$55+' }
-  ]
+ const services = [
+  { id: 'kids_services', name: 'Kids Services' },
+  { id: 'haircut_styling', name: 'Hair Cuts & Styling' },
+  { id: 'shampoo_conditioner', name: 'Shampoo & Conditioner' },
+  { id: 'styling', name: 'Styling' },
+  { id: 'hair_coloring', name: 'Hair Colouring' },
+  { id: 'root_touch_up', name: 'Root Touch Up' },
+  { id: 'fashion_streaks', name: 'Fashion Streaks' },
+  { id: 'hair_spa', name: 'Hair Spa' },
+  { id: 'keratin_treatment', name: 'Keratin Hair Spa' },
+  { id: 'anti_dandruff', name: 'Anti Dandruff Treatment' },
+  { id: 'advance_styling', name: 'Advance Styling' },
+  { id: 'hair_treatment', name: 'Hair Treatment' },
+  { id: 'head_massage', name: 'Head Massage' },
+  { id: 'hair_scalp_treatment', name: 'Hair & Scalp Treatment' },
+  { id: 'facial', name: 'Facial' },
+  { id: 'threading', name: 'Threading' },
+  { id: 'makeup', name: 'Makeup' },
+  { id: 'beauty_services', name: 'Beauty Services' },
+  { id: 'waxing', name: 'Waxing' },
+  { id: 'bleach', name: 'Bleach' },
+  { id: 'ear_piercing', name: 'Ear Piercing' }
+];
   
   const stylists = [
     { id: 'sophia', name: 'Sophia Reynolds', specialties: ['Haircut', 'Styling'] },
