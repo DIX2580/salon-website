@@ -1,5 +1,9 @@
+// Updated Contact.jsx
 import { useState } from 'react'
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa'
+import axios from 'axios'
+
+const API_URL = 'http://localhost:5000/api'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +12,9 @@ const Contact = () => {
     subject: '',
     message: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState(null)
   
   const handleChange = (e) => {
     setFormData({
@@ -16,19 +23,34 @@ const Contact = () => {
     })
   }
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log(formData)
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    })
-    // Show success message
-    alert('Thank you for your message! We will get back to you soon.')
+    setIsSubmitting(true)
+    setSubmitError(null)
+    
+    try {
+      // Send data to backend API
+      await axios.post(`${API_URL}/contacts`, formData)
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      })
+      setSubmitSuccess(true)
+      
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false)
+      }, 5000)
+    } catch (error) {
+      console.error('Error submitting contact form:', error)
+      setSubmitError('Failed to send your message. Please try again later.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
   
   return (
@@ -72,7 +94,7 @@ const Contact = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-serif text-lg font-semibold mb-1">Email Address</h4>
-                  <p className="text-gray-600">info@Hair Hackersalon.com</p>
+                  <p className="text-gray-600">info@hairhackersalon.com</p>
                 </div>
               </div>
               
@@ -101,6 +123,18 @@ const Contact = () => {
           
           <div>
             <h3 className="font-serif text-2xl font-semibold mb-6">Send Us a Message</h3>
+            {submitSuccess && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                Thank you for your message! We will get back to you soon.
+              </div>
+            )}
+            
+            {submitError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                {submitError}
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-gray-700 mb-2">Full Name</label>
@@ -113,6 +147,7 @@ const Contact = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Your name"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -127,6 +162,7 @@ const Contact = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Your email"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -141,6 +177,7 @@ const Contact = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Subject"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -155,14 +192,16 @@ const Contact = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Your message"
                   required
+                  disabled={isSubmitting}
                 ></textarea>
               </div>
               
               <button 
                 type="submit"
                 className="btn-primary w-full"
+                disabled={isSubmitting}
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

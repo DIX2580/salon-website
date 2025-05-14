@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios' // Make sure to install axios with: npm install axios
 
 const Booking = () => {
   const [step, setStep] = useState(1)
@@ -12,6 +13,12 @@ const Booking = () => {
     phone: '',
     notes: ''
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
+  
+  // API base URL - change this to match your backend URL
+  const API_URL =  'http://localhost:5000/api'
   
   const services = [
     { id: 'haircut', name: 'Haircut & Styling', duration: '60 min', price: '$65+' },
@@ -49,10 +56,7 @@ const Booking = () => {
     })
   }
   
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(bookingData)
-    alert('Your appointment has been booked successfully! You will receive a confirmation email shortly.')
+  const resetForm = () => {
     setBookingData({
       service: '',
       stylist: '',
@@ -64,6 +68,38 @@ const Booking = () => {
       notes: ''
     })
     setStep(1)
+  }
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    
+    try {
+      // Get the selected service and stylist names
+      const serviceObj = services.find(s => s.id === bookingData.service) || {}
+      const stylistObj = stylists.find(s => s.id === bookingData.stylist) || {}
+      
+      // Prepare data for submission
+      const bookingPayload = {
+        ...bookingData,
+        service: serviceObj.name, // Send actual name instead of ID
+        stylist: stylistObj.name  // Send actual name instead of ID
+      }
+      
+      // Submit booking to backend API
+      const response = await axios.post(`${API_URL}/bookings`, bookingPayload)
+      console.log('Booking successful:', response.data)
+      
+      setSuccess(true)
+      resetForm()
+      setTimeout(() => setSuccess(false), 5000) // Clear success message after 5 seconds
+    } catch (err) {
+      console.error('Booking error:', err)
+      setError(err.response?.data?.message || 'Failed to book appointment. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Get selected item names
@@ -107,6 +143,30 @@ const Booking = () => {
             Complete the steps below to schedule your salon experience
           </p>
         </div>
+
+        {/* Success Message */}
+        {success && (
+          <div className="mb-6 bg-green-900/40 border border-green-500 text-green-100 p-4 rounded-xl animate-fadeIn">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <p>Your appointment has been booked successfully! You will receive a confirmation email shortly.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 bg-red-900/40 border border-red-500 text-red-100 p-4 rounded-xl animate-fadeIn">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p>{error}</p>
+            </div>
+          </div>
+        )}
 
         {/* Main Form Card */}
         <div className="bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl border border-zinc-800">
@@ -344,9 +404,15 @@ const Booking = () => {
                     <div className="pt-2">
                       <button
                         type="submit"
-                        className="w-full p-4 bg-gradient-to-r from-amber-600 via-amber-500 to-primary rounded-xl text-white font-bold hover:opacity-90 transition-opacity"
+                        disabled={loading}
+                        className={`
+                          w-full p-4 rounded-xl text-white font-bold transition-all
+                          ${loading 
+                            ? 'bg-zinc-700 cursor-not-allowed' 
+                            : 'bg-gradient-to-r from-amber-600 via-amber-500 to-primary hover:opacity-90'}
+                        `}
                       >
-                        Confirm Booking
+                        {loading ? 'Processing...' : 'Confirm Booking'}
                       </button>
                       <p className="text-gray-500 text-sm text-center mt-3">
                         By confirming, you agree to our booking terms and policies
