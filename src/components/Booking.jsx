@@ -18,7 +18,7 @@ const Booking = () => {
   const [success, setSuccess] = useState(false)
   
   // API base URL - change this to match your backend URL
-  const API_URL =  'http://localhost:5000/api'
+  const API_URL =  'https://salon-website-backend.onrender.com/api'
   
   const services = [
     { id: 'haircut', name: 'Haircut & Styling', duration: '60 min', price: '$65+' },

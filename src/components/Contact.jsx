@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5000/api'
+// Define multiple API endpoints - use the production URL or fallback to localhost for development
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://salon-website-backend.onrender.com/api'
+  : 'http://localhost:5000/api'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
