@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
-import { 
-  FaCut, 
-  FaPaintBrush, 
-  FaSpa, 
-  FaHands, 
-  FaChevronRight, 
-  FaGlassMartiniAlt, 
-  FaRing, 
-  FaBriefcase, 
-  FaMale, 
+import { FaHandSparkles } from "react-icons/fa";
+import {
+  FaCut,
+  FaPaintBrush,
+  FaSpa,
+  FaHands,
+  FaChevronRight,
+  FaGlassMartiniAlt,
+  FaRing,
+  FaBriefcase,
+  FaMale,
   FaFemale,
   FaLeaf
+
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
 const ServicesCard = ({ service, index }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -34,10 +36,10 @@ const ServicesCard = ({ service, index }) => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-0 opacity-90"></div>
-        
+
         {/* 3D Parallax Effect */}
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             x: isHovered ? 10 : 0,
             y: isHovered ? -10 : 0,
             scale: isHovered ? 1.05 : 1
@@ -46,7 +48,7 @@ const ServicesCard = ({ service, index }) => {
           className="absolute inset-0 z-10"
         >
           <div className="absolute bottom-6 left-6 text-white">
-            <motion.h3 
+            <motion.h3
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
@@ -54,7 +56,7 @@ const ServicesCard = ({ service, index }) => {
             >
               {service.title}
             </motion.h3>
-            <motion.div 
+            <motion.div
               initial={{ width: 0 }}
               animate={{ width: isHovered ? '80px' : '40px' }}
               className="h-1 bg-primary mt-2 rounded-full"
@@ -62,8 +64,8 @@ const ServicesCard = ({ service, index }) => {
             ></motion.div>
           </div>
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           className="absolute top-6 right-6 z-10"
           animate={{ scale: isHovered ? 1.2 : 1, rotate: isHovered ? 10 : 0 }}
           transition={{ duration: 0.3, type: "spring" }}
@@ -73,18 +75,18 @@ const ServicesCard = ({ service, index }) => {
           </div>
         </motion.div>
       </div>
-      
-      <motion.div 
+
+      <motion.div
         className="p-6 relative z-10 bg-gray-800"
         initial={{ height: "auto" }}
         animate={{ height: isHovered ? "auto" : "auto" }}
         transition={{ duration: 0.5 }}
       >
         <p className="text-gray-300 mb-5 text-sm leading-relaxed">{service.description}</p>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ 
+          animate={{
             opacity: isHovered ? 1 : 0,
             height: isHovered ? "auto" : 0,
             marginBottom: isHovered ? 16 : 0
@@ -95,8 +97,8 @@ const ServicesCard = ({ service, index }) => {
           <div className="pt-4 border-t border-gray-700">
             <ul className="space-y-2">
               {service.features.map((feature, i) => (
-                <motion.li 
-                  key={i} 
+                <motion.li
+                  key={i}
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ duration: 0.3, delay: i * 0.05 }}
@@ -111,7 +113,7 @@ const ServicesCard = ({ service, index }) => {
             </ul>
           </div>
         </motion.div>
-        
+
         <motion.div
           whileHover={{ x: 5 }}
           className="inline-flex items-center justify-center text-sm font-medium text-primary hover:text-purple-300 transition-colors"
@@ -120,11 +122,11 @@ const ServicesCard = ({ service, index }) => {
           <FaChevronRight className="ml-1 text-xs" />
         </motion.div>
       </motion.div>
-      
+
       {/* Gradient Border Animation */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 p-0.5 rounded-xl z-0 bg-gradient-to-r from-purple-600 to-pink-500 opacity-0 group-hover:opacity-100"
-        animate={{ 
+        animate={{
           backgroundPosition: isHovered ? "200% 0" : "0% 0"
         }}
         transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
@@ -140,18 +142,18 @@ const AnimatedBackground = () => {
     // you would set up an actual Three.js scene with proper rendering
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
-    
+
     // Simulate Three.js effect with a CSS animation
     canvas.style.background = 'radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, rgba(0, 0, 0, 0) 70%)';
-    
+
     return () => {
       // Cleanup
     };
   }, []);
 
   return (
-    <div 
-      id="bg-canvas" 
+    <div
+      id="bg-canvas"
       className="absolute inset-0 -z-10 opacity-60"
     ></div>
   );
@@ -202,7 +204,7 @@ const Services = () => {
       icon: <FaFemale className="text-3xl" />,
       title: "Women's Services",
       description: "Complete beauty solutions designed especially for women's unique beauty requirements.",
-      image: "https://i.pinimg.com/736x/20/83/0c/20830c201f99b2615e61d54a7d48c702.jpg", 
+      image: "https://i.pinimg.com/736x/20/83/0c/20830c201f99b2615e61d54a7d48c702.jpg",
       features: ["Keratin Treatment", "Hair Extensions", "Perming", "Smoothening"],
       category: ['women']
     },
@@ -215,12 +217,12 @@ const Services = () => {
       category: ['men', 'women', 'spa']
     },
     {
-      icon: <FaHands className="text-3xl" />,
-      title: "Nail Services",
-      description: "Complete your look with beautiful nails, from classic designs to creative nail art.",
-      image: "	https://i.pinimg.com/736x/20/e4/ca/20e4ca45873b7c3d776d71d537aa717c.jpg",
-      features: ["Gel Polish", "Nail Art", "Spa Pedicure", "Paraffin Treatment"],
-      category: ['men', 'women']
+      icon: <FaLeaf className="text-3xl" />,
+      title: "Ayurvedic Treatments",
+      description: "Traditional Indian wellness therapies using natural herbs and ancient techniques.",
+      image: "	https://i.pinimg.com/736x/cd/71/f1/cd71f156f2460ba4aee5ca6ae4348be9.jpg",
+      features: ["Head Massage", "Body Polishing", "Herbal Facials", "Hot Oil Treatment"],
+      category: ['men', 'women', 'spa']
     },
     {
       icon: <FaRing className="text-3xl" />,
@@ -231,134 +233,150 @@ const Services = () => {
       category: ['women', 'bridal']
     },
     {
-      icon: <FaLeaf className="text-3xl" />,
-      title: "Ayurvedic Treatments",
-      description: "Traditional Indian wellness therapies using natural herbs and ancient techniques.",
-      image: "	https://i.pinimg.com/736x/cd/71/f1/cd71f156f2460ba4aee5ca6ae4348be9.jpg",
-      features: ["Head Massage", "Body Polishing", "Herbal Facials", "Hot Oil Treatment"],
-      category: ['men', 'women', 'spa']
-    },
-    {
       icon: <FaGlassMartiniAlt className="text-3xl" />,
       title: "Pre-Wedding Packages",
       description: "Complete beauty regimens to prepare you for your big day, starting months in advance.",
-      image: "/api/placeholder/600/400",
+      image: "https://i.pinimg.com/736x/6b/24/ee/6b24eeb88f086d66c33dec8881b83455.jpg",
       features: ["Skin Brightening", "Hair Treatments", "Body Polishing", "Nail Care"],
       category: ['women', 'bridal', 'men']
+    },
+    {
+      icon: <FaHandSparkles className="text-3xl" />,
+      title: "Nail Extension",
+      description: "Quick, efficient services designed for busy professionals who need to look their best.",
+      image: "https://i.pinimg.com/736x/f1/f0/07/f1f007be9d0c86dff19b84191c95b86e.jpg",
+      features: ["Acrylic Nail Extensions", "Gel Nail Extensions", "Nail Art on Extensions", "Nail Shaping and Filing"],
+      category: ['women']
+    },
+    {
+      icon: <FaRing className="text-3xl" />,
+      title: "Ear Piercing",
+      description: "Quick, efficient services designed for busy professionals who need to look their best.",
+      image: "https://i.pinimg.com/736x/3f/c9/a5/3fc9a55a14ecf223ee9af77e73f1d16c.jpg",
+      features: ["Single Lobe Piercing", "Double Lobe Piercing", "Cartilage Piercing", "Aftercare Consultation"],
+      category: ['women']
+    },
+    {
+      icon: <FaHandSparkles className="text-3xl" />,
+      title: "Waxing and Skin Bleaching",
+      description: "Quick, efficient services designed for busy professionals who need to look their best.",
+      image: "	https://i.pinimg.com/736x/20/b0/be/20b0be09997ff463b0bb4a4ef0feac76.jpg",
+      features: ["Full Face Bleaching", "Full Body Bleaching", "Underarm Bleaching", "Dark Spot Correction", "Eyebrow Shaping", "Underarm Waxing", ""],
+      category: ['women']
     },
     {
       icon: <FaBriefcase className="text-3xl" />,
       title: "Executive Packages",
       description: "Quick, efficient services designed for busy professionals who need to look their best.",
-      image: "/api/placeholder/600/400",
+      image: "https://i.pinimg.com/736x/3a/08/be/3a08be4ab4966c2539c211661e1b8f2e.jpg",
       features: ["Express Facial", "Quick Haircut", "Hand Care", "Shoe Shine"],
       category: ['men', 'women']
     }
+
   ];
 
-  const filteredServices = selectedCategory === 'all' 
-    ? services 
+  const filteredServices = selectedCategory === 'all'
+    ? services
     : services.filter(service => service.category.includes(selectedCategory));
 
   return (
     <section id="services" className="py-24 relative overflow-hidden bg-gray-900 text-white">
       <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-0 opacity-90"></div>
       <AnimatedBackground />
-      
+
       {/* Floating Decorative Elements */}
       <div className="hidden lg:block">
-        <motion.div 
+        <motion.div
           className="absolute top-40 left-10 w-64 h-64 rounded-full bg-purple-900 opacity-20 blur-3xl"
-          animate={{ 
+          animate={{
             x: [0, 30, 0],
             y: [0, -30, 0],
           }}
-          transition={{ 
-            duration: 8, 
+          transition={{
+            duration: 8,
             repeat: Infinity,
-            repeatType: "reverse" 
+            repeatType: "reverse"
           }}
         ></motion.div>
-        <motion.div 
+        <motion.div
           className="absolute bottom-40 right-10 w-80 h-80 rounded-full bg-pink-900 opacity-20 blur-3xl"
-          animate={{ 
+          animate={{
             x: [0, -40, 0],
             y: [0, 40, 0],
           }}
-          transition={{ 
-            duration: 10, 
+          transition={{
+            duration: 10,
             repeat: Infinity,
-            repeatType: "reverse" 
+            repeatType: "reverse"
           }}
         ></motion.div>
       </div>
-      
+
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: -20 }}
-          animate={{ 
-            opacity: animateHeader ? 1 : 0, 
-            y: animateHeader ? 0 : -20 
+          animate={{
+            opacity: animateHeader ? 1 : 0,
+            y: animateHeader ? 0 : -20
           }}
           transition={{ duration: 0.7 }}
         >
-          <motion.span 
+          <motion.span
             className="text-sm font-medium tracking-wider uppercase text-purple-300 mb-3 inline-block px-4 py-1 bg-primary bg-opacity-50 rounded-full"
             whileHover={{ scale: 1.05 }}
           >
-               <motion.span 
-                  className="px-6 py-2 rounded-full text-white font-medium tracking-wider flex items-center space-x-2 relative overflow-hidden"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  <motion.span 
-                    className="absolute inset-0 bg-primary rounded-full"
-                    animate={{ opacity: [0.8, 0.95, 0.8] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                  />
-                  <motion.span 
-                    className="absolute inset-0 bg-primary rounded-full"
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    style={{ opacity: 0.9 }}
-                  />
-                  <motion.span 
-                    className="w-2 h-2 bg-white rounded-full inline-block mr-2 relative z-10"
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                  <span className="relative z-10"> Luxury Beauty Experience</span>
-                </motion.span>
-           
+            <motion.span
+              className="px-6 py-2 rounded-full text-white font-medium tracking-wider flex items-center space-x-2 relative overflow-hidden"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <motion.span
+                className="absolute inset-0 bg-primary rounded-full"
+                animate={{ opacity: [0.8, 0.95, 0.8] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <motion.span
+                className="absolute inset-0 bg-primary rounded-full"
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                style={{ opacity: 0.9 }}
+              />
+              <motion.span
+                className="w-2 h-2 bg-white rounded-full inline-block mr-2 relative z-10"
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <span className="relative z-10"> Luxury Beauty Experience</span>
+            </motion.span>
+
           </motion.span>
           <h2 className="text-5xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-black">
             Premium Beauty Services
           </h2>
-          <motion.div 
+          <motion.div
             className="w-24 h-1 bg-gradient-to-r from-primary to-pink-400 mx-auto mb-8 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: animateHeader ? "6rem" : 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           ></motion.div>
           <p className="max-w-2xl mx-auto text-gray-300 text-lg">
-            Discover our  comprehensive range of professional hair and beauty services 
-            at Radiance Unisex Salon, where we blend traditional Indian techniques with 
-            modern styling to help you look and feel extraordinary. 
+            Discover our  comprehensive range of professional hair and beauty services
+            at Radiance Unisex Salon, where we blend traditional Indian techniques with
+            modern styling to help you look and feel extraordinary.
           </p>
         </motion.div>
-        
+
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center mb-12 gap-3">
           {categories.map((category) => (
             <motion.button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                selectedCategory === category.id 
-                  ? 'bg-gradient-to-r from-primary to-black text-white shadow-lg' 
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${selectedCategory === category.id
+                  ? 'bg-gradient-to-r from-primary to-black text-white shadow-lg'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700 shadow'
-              }`}
+                }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -366,8 +384,8 @@ const Services = () => {
             </motion.button>
           ))}
         </div>
-        
-        <motion.div 
+
+        <motion.div
           className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
           layout
         >
@@ -375,23 +393,23 @@ const Services = () => {
             <ServicesCard key={index} service={service} index={index} />
           ))}
         </motion.div>
-        
-        <motion.div 
+
+        <motion.div
           className="text-center mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
-          <motion.button 
+          <motion.button
             className="px-8 py-4 btn-primary duration-300"
-            whileHover={{ 
+            whileHover={{
               scale: 1.05,
               boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.4), 0 8px 10px -6px rgba(139, 92, 246, 0.3)"
             }}
             whileTap={{ scale: 0.98 }}
           >
             <a href="/booking ">            Book Your Appointment Now
-</a>
+            </a>
           </motion.button>
         </motion.div>
       </div>
