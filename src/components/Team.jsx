@@ -8,49 +8,72 @@ const Team = () => {
   const initialized = useRef(false);
   const team = [
     {
-      name: "Alex Morgan",
+      name: "Jitendra Thakur",
       role: "Founder & Master Stylist",
       bio: "Specializing in modern cuts and styling for all genders with over 15 years of experience.",
-      image: "/st1.jpg",
+      image: "/Owner.jpg",
       social: {
         instagram: "#",
         facebook: "#",
         tiktok: "#"
       }
     },
-    {
-      name: "Jamie Chen",
-      role: "Color Specialist",
-      bio: "Known for innovative color techniques and avant-garde styles that make a statement.",
-      image: "/images/team-2.jpg",
-      social: {
-        instagram: "#",
-        facebook: "#",
-        tiktok: "#"
-      }
-    },
-    {
-      name: "Sam Rodriguez",
-      role: "Barber & Texture Expert",
-      bio: "Expert in precision fades, beard sculpting, and styling textured hair of all types.",
-      image: "/images/team-3.jpg",
-      social: {
-        instagram: "#",
-        facebook: "#",
-        tiktok: "#"
-      }
-    },
-    {
-      name: "Jordan Wilson",
-      role: "Creative Director",
+      {
+      name: "Devanand Thakur",
+      role: "Ladies Hair Stylish",
       bio: "Fashion forward stylist specializing in editorial looks and transformative makeovers.",
-      image: "/images/team-4.jpg",
+      image: "/Aanand.jpg",
       social: {
         instagram: "#",
         facebook: "#",
         tiktok: "#"
       }
-    }
+    },
+    {
+      name: "Akash",
+      role: "Hair Stylish & Facial Expert",
+      bio: "Known for innovative color techniques and avant-garde styles that make a statement.",
+      image: "/Akash.jpg",
+      social: {
+        instagram: "#",
+        facebook: "#",
+        tiktok: "#"
+      }
+    },
+    {
+      name: "Praveen",
+      role: "Hair Stylish & Texture Expert",
+      bio: "Expert in precision fades, beard sculpting, and styling textured hair of all types.",
+      image: "/Praveen.jpg",
+      social: {
+        instagram: "#",
+        facebook: "#",
+        tiktok: "#"
+      }
+    },
+    {
+      name: "Nikita",
+      role: "Makeup Expert, Nail Expert & SPA Massager",
+      bio: "Expert in precision Makeup and Facial and styling of Nails of all types.",
+      image: "/Nikita.jpg",
+      social: {
+        instagram: "#",
+        facebook: "#",
+        tiktok: "#"
+      }
+    },
+      {
+      name: "Liza",
+      role: "Makeup Expert",
+      bio: "Expert in precision Makeup and Facial..",
+      image: "/Liza.jpg",
+      social: {
+        instagram: "#",
+        facebook: "#",
+        tiktok: "#"
+      }
+    },
+  
   ];
 
   useEffect(() => {
