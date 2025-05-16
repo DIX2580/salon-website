@@ -7,8 +7,8 @@ dotenv.config();
 
 // Initialize Twilio client with API key
 // Note: When using an API key (starting with SK), you also need to provide the Account SID
-const apiKeySid = process.env.TWILIO_API_KEY_SID || 'SKda96516767ef751b6b2e44446e3b50f6';
-const apiKeySecret = process.env.TWILIO_API_KEY_SECRET || '3moiGM15FA4WWZJ0Ya30ZGfTCokIOgQo';
+const apiKeySid = process.env.TWILIO_API_KEY_SID ;
+const apiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 const accountSid = process.env.TWILIO_ACCOUNT_SID; // This should start with AC
 
 // Create client with API key and Account SID
