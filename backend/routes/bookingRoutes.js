@@ -2,12 +2,22 @@
 const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
+const whatsappService = require('../services/whatsappService');
 
 // Create a new booking
 router.post('/', async (req, res) => {
   try {
     const newBooking = new Booking(req.body);
     const savedBooking = await newBooking.save();
+    
+    // Send WhatsApp notification
+    try {
+      await whatsappService.sendBookingNotification(savedBooking);
+    } catch (whatsappError) {
+      console.error('WhatsApp notification failed:', whatsappError);
+      // Continue with the booking process even if WhatsApp notification fails
+    }
+    
     res.status(201).json(savedBooking);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -58,7 +68,7 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Booking deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
+  } 
 });
 
 module.exports = router;

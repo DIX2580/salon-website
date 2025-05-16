@@ -47,11 +47,13 @@ const Booking = () => {
 ];
   
   const stylists = [
-    { id: 'sophia', name: 'Sophia Reynolds', specialties: ['Haircut', 'Styling'] },
-    { id: 'michael', name: 'Michael Chen', specialties: ['Color', 'Highlights'] },
-    { id: 'olivia', name: 'Olivia Garcia', specialties: ['Facial', 'Skincare'] },
-    { id: 'james', name: 'James Wilson', specialties: ['Manicure', 'Pedicure'] }
-  ]
+  { id: 'jitendra', name: 'Jitendra Thakur', specialties: ['Modern Cuts', 'Styling'] },
+  { id: 'devanand', name: 'Devanand Thakur', specialties: ['Ladies Hair', 'Makeovers'] },
+  { id: 'akash', name: 'Akash', specialties: ['Hair Styling', 'Facial'] },
+  { id: 'praveen', name: 'Praveen', specialties: ['Precision Fades', 'Beard Sculpting'] },
+  { id: 'nikita', name: 'Nikita', specialties: ['Makeup', 'Nails'] },
+  { id: 'liza', name: 'Liza', specialties: ['Makeup', 'Facial'] }
+]
   
   const timeSlots = [
     '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
