@@ -5,8 +5,11 @@ import axios from 'axios'
 
 // Define multiple API endpoints - use the production URL or fallback to localhost for development
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://salon-website-backend.onrender.com/api'
-  : 'http://localhost:5000/api'
+  ? (process.env.USE_OLD_API === 'true'
+      ? 'https://salon-website-backend.onrender.com/api'
+      : 'https://salon-website-1-nzyz.onrender.com/api')
+  : 'http://localhost:5000/api';
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
