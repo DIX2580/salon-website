@@ -13,14 +13,15 @@ const Home = () => {
     <div className='pt-10'><Hero /></div>
           <hr/>
       <div className='pt-1'></div>
+       <Services />
+         <hr/>
+      <div className='pt-1'></div>
       
       <About />
          <hr/>
       <div className='pt-1'></div>
       
-      <Services />
-         <hr/>
-      <div className='pt-1'></div>
+     
       <Team />
          <hr/>
       <div className='pt-1'></div>
