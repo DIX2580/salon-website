@@ -127,22 +127,14 @@ const Team = () => {
                 <img 
                   src={member.image} 
                   alt={member.name}
-                  className="w-full h-full object-cover object-center transform group-hover:scale-110 transition duration-700"
+                  className=" object-cover object-center transform group-hover:scale-110 transition duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1a1a1a] opacity-90"></div>
                 
                 {/* Overlay with social icons */}
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/30 transition-all duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex space-x-4">
-                    <a href={member.social.instagram} className="w-10 h-10 rounded-full bg-[#121212] flex items-center justify-center text-primary hover:bg-primary hover:text-[#121212] transition-colors duration-300 transform hover:scale-110">
-                      <FaInstagram size={18} />
-                    </a>
-                    <a href={member.social.facebook} className="w-10 h-10 rounded-full bg-[#121212] flex items-center justify-center text-primary hover:bg-primary hover:text-[#121212] transition-colors duration-300 transform hover:scale-110">
-                      <FaFacebookF size={16} />
-                    </a>
-                    <a href={member.social.tiktok} className="w-10 h-10 rounded-full bg-[#121212] flex items-center justify-center text-primary hover:bg-primary hover:text-[#121212] transition-colors duration-300 transform hover:scale-110">
-                      <FaTiktok size={16} />
-                    </a>
+                  
                   </div>
                 </div>
               </div>

@@ -181,40 +181,40 @@ const Services = () => {
       title: "Haircuts & Styling",
       description: "Premium haircuts and styling services by master stylists to give you a perfect look.",
       image: "	https://i.pinimg.com/736x/7d/76/2e/7d762e98bbd81d86d3903fc7ffb8ec72.jpg",
-      features: ["Precision Cuts", "Trending Styles", "Blowouts", "Hair Spa"],
-      category: ['men', 'women']
-    },
-    {
-      icon: <FaPaintBrush className="text-3xl" />,
-      title: "Hair Coloring",
-      description: "Express yourself with vibrant colors, subtle highlights, or natural-looking shades.",
-      image: "https://i.pinimg.com/736x/d1/6c/d8/d16cd84b76ad6eb6f47a7a8eb052051f.jpg",
-      features: ["Global Color", "Balayage", "Highlights", "Fashion Colors"],
-      category: ['men', 'women']
+      features: ["Hircut", "Beard Styling", "Shaving", "Hair Coloring", "Sampoo & Conditionar"],
+      category: ['men',]
     },
     {
       icon: <FaMale className="text-3xl" />,
-      title: "Men's Grooming",
+      title: "Hair Texture",
       description: "Premium grooming services tailored specifically for men's needs and style preferences.",
-      image: "https://i.pinimg.com/736x/3a/ec/da/3aecda79a4c250e0bb1c33f5dfd4163e.jpg",
-      features: ["Beard Styling", "Shaving", "Hair Tattoo", "Hair Bonding"],
+      image: "https://i.pinimg.com/736x/d4/82/f3/d482f3d949454b755fa318a60154016c.jpg",
+      features: ["Nanoplastia", "Botox Treatment",],
       category: ['men']
     },
     {
       icon: <FaFemale className="text-3xl" />,
-      title: "Women's Services",
+      title: "GROOM",
       description: "Complete beauty solutions designed especially for women's unique beauty requirements.",
-      image: "https://i.pinimg.com/736x/20/83/0c/20830c201f99b2615e61d54a7d48c702.jpg",
-      features: ["Keratin Treatment", "Hair Extensions", "Perming", "Smoothening"],
-      category: ['women']
+      image: "https://i.pinimg.com/736x/4b/14/8c/4b148cd77735e99a50156e9970131e8d.jpg",
+      features: ["Makeup-Mac","Makeup-Crylon",],
+      category: ['men']
+    },
+        {
+      icon: <FaPaintBrush className="text-3xl" />,
+      title: "Skin Care",
+      description: "Express yourself with vibrant colors, subtle highlights, or natural-looking shades.",
+      image: "	https://i.pinimg.com/736x/8c/9f/a7/8c9fa7dbc6e87d9a2d83c5bf0acf7874.jpg",
+      features: ["Facial", "Cleanup", "Gold Facial", "Anti-Ageing Facial","Derma Plan Treatment","De-Tan","O3-Facial","Lotus Facial"],
+      category: ['men', 'women']
     },
     {
       icon: <FaSpa className="text-3xl" />,
-      title: "Facial Treatments",
+      title: "Hair & Styling",
       description: "Rejuvenate your skin with our premium facials tailored to your skin type and concerns.",
-      image: "	https://i.pinimg.com/736x/33/a2/cd/33a2cd275cb11daf3e6c24551d7d3658.jpg",
-      features: ["Gold Facial", "Diamond Facial", "Anti-Aging", "Hydrating"],
-      category: ['men', 'women', 'spa']
+      image: "	https://i.pinimg.com/736x/7c/7e/ab/7c7eab6239551596902f30cdc16b4366.jpg",
+      features: ["Haircut", "Hair Coloring", "Hair Roming", "Hydrating"],
+      category: ['women',]
     },
     {
       icon: <FaLeaf className="text-3xl" />,
@@ -222,7 +222,7 @@ const Services = () => {
       description: "Traditional Indian wellness therapies using natural herbs and ancient techniques.",
       image: "	https://i.pinimg.com/736x/cd/71/f1/cd71f156f2460ba4aee5ca6ae4348be9.jpg",
       features: ["Head Massage", "Body Polishing", "Herbal Facials", "Hot Oil Treatment"],
-      category: ['men', 'women', 'spa']
+      category: ['women', 'spa']
     },
     {
       icon: <FaRing className="text-3xl" />,
@@ -238,7 +238,7 @@ const Services = () => {
       description: "Complete beauty regimens to prepare you for your big day, starting months in advance.",
       image: "https://i.pinimg.com/736x/6b/24/ee/6b24eeb88f086d66c33dec8881b83455.jpg",
       features: ["Skin Brightening", "Hair Treatments", "Body Polishing", "Nail Care"],
-      category: ['women', 'bridal', 'men']
+      category: ['women', 'bridal',]
     },
     {
       icon: <FaHandSparkles className="text-3xl" />,
