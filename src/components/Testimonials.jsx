@@ -27,23 +27,23 @@ const Testimonials = () => {
   
   const testimonials = [
     {
-      name: "Emma Thompson",
-      image: "/images/testimonial-1.jpg",
-      text: "I've been coming to Hair Hacker for over a year now, and I'm always thrilled with the results. The stylists are true professionals who listen to what you want and deliver every time. Highly recommend!",
+      name: "Payalpriyadarsini Sahoo",
+      image: "9th.jpg",
+      text: "I have visited for the first time and this was one of the best place to do your hair and the staff was also good and akash attended me and he dose as perfect as imagined one of the best hairstylist!",
       rating: 5,
       role: "Regular Client"
     },
     {
-      name: "David Rodriguez",
-      image: "/images/testimonial-2.jpg",
-      text: "The atmosphere at Hair Hacker is so welcoming and relaxing. My haircut was exactly what I wanted, and the head massage during the wash was an unexpected bonus. This salon really goes above and beyond.",
+      name: "Satyanarayan Routray",
+      image: "10th.jpg",
+      text: "It's one of a best unisex parlor in Bhubaneswar which is situated at Rasulgarh. The Behavior and attitude of staffs so impressive with beautiful services..",
       rating: 5,
       role: "First-time Visitor"
     },
     {
-      name: "Sarah Johnson",
-      image: "/images/testimonial-3.jpg",
-      text: "I recently had a facial treatment at Hair Hacker and my skin has never looked better! The esthetician was knowledgeable and personalized the treatment to address my specific concerns. I've already booked my next appointment!",
+      name: "Ajnabi Parida",
+      image: "11th.jpg",
+      text: "Very nice service and very friendly behavior and i am so happy thank you so much Nikita 🥰excellent massage full on relaxed all employee service and behavior to Good it's really good salon thank you the hair hacker team Services!",
       rating: 4,
       role: "Spa Client"
     }

@@ -82,11 +82,11 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <FaMapMarkerAlt className="text-primary mt-1 mr-3" />
-                <span className="text-gray-300">123 Beauty Street, Suite 100<br />New York, NY 10001</span>
+                <span className="text-gray-300">Plot no-606/736, Bomikhal, Near Utkal Hyundai <br />Bhubaneswar, Odisha 751010</span>
               </li>
               <li className="flex items-center">
                 <FaPhone className="text-primary mr-3" />
-                <span className="text-gray-300">(123) 456-7890</span>
+                <span className="text-gray-300">(+91) 9668265622</span>
               </li>
               <li className="flex items-center">
                 <FaEnvelope className="text-primary mr-3" />

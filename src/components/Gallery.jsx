@@ -9,14 +9,14 @@ const Gallery = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const galleryImages = [
-    { src: "/images/gallery-1.jpg", category: "Hair" },
-    { src: "/images/gallery-2.jpg", category: "Color" },
-    { src: "/images/gallery-3.jpg", category: "Facial" },
-    { src: "/images/gallery-4.jpg", category: "Nails" },
-    { src: "/images/gallery-5.jpg", category: "Hair" },
-    { src: "/images/gallery-6.jpg", category: "Color" },
-    { src: "/images/gallery-7.jpg", category: "Facial" },
-    { src: "/images/gallery-8.jpg", category: "Nails" },
+    { src: "/1st.jpg", category: "Hair" },
+    { src: "/3rd.jpg", category: "Color" },
+    { src: "/7th.jpg", category: "Facial" },
+    { src: "/5th.jpg", category: "Nails" },
+    { src: "/2nd.jpg", category: "Hair" },
+    { src: "/4th.jpg", category: "Color" },
+    { src: "/8th.jpg", category: "Facial" },
+    { src: "/6th.jpg", category: "Nails" },
   ];
 
   useEffect(() => {
