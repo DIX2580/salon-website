@@ -45,24 +45,61 @@ const AnimatedBackground = () => {
   )
 }
 
-// Logo component with modern reveal animation
+// Logo component with image and modern reveal animation
 const Logo = () => {
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
+  
   const springProps = useSpring({
-    from: { opacity: 1, transform: 'translateY(0px)' },
-    to: [
-      { opacity: 1, transform: 'translateY(0px)' },
-      { opacity: 1, transform: 'translateY(-5px)', config: { tension: 300, friction: 10 } },
-      { opacity: 1, transform: 'translateY(0px)', config: { tension: 300, friction: 15 } }
-    ],
-    config: { tension: 300, friction: 15 },
+    from: { opacity: 0, transform: 'translateY(20px) scale(0.9)' },
+    to: { 
+      opacity: 1, 
+      transform: imageLoaded ? 'translateY(0px) scale(1)' : 'translateY(10px) scale(0.95)'
+    },
+    config: { tension: 300, friction: 20 },
     delay: 100
   })
 
+  const hoverSpring = useSpring({
+    transform: 'translateY(0px)',
+    config: { tension: 300, friction: 15 }
+  })
+
   return (
-    <animated.div style={springProps} className="relative">
-      <Link to="/" className="font-serif text-2xl font-bold text-primary relative inline-block">
-        <span className="relative z-10">Hair Hacker</span>
-        <animated.div className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary origin-left transform scale-x-0 animate-expand" />
+    <animated.div 
+      style={springProps} 
+      className="relative"
+      onMouseEnter={() => hoverSpring.transform.set('translateY(-2px)')}
+      onMouseLeave={() => hoverSpring.transform.set('translateY(0px)')}
+    >
+      <Link to="/" className="flex items-center space-x-3 group">
+        {/* Logo Image */}
+        <div className="relative overflow-hidden rounded-lg">
+          <img
+            src="/logo.png"
+            alt="Hair Hacker Logo"
+            className={`h-10 w-auto transition-all duration-300 group-hover:scale-105 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
+          />
+          
+          {/* Loading placeholder */}
+         
+          
+          {/* Fallback if image fails to load */}
+       
+          
+          {/* Hover effect overlay */}
+          <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-lg" />
+        </div>
+        
+        {/* Text Logo */}
+        <div className="relative">
+          
+          <animated.div className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary origin-left transform scale-x-0 animate-expand group-hover:bg-orange-400 transition-colors duration-300" />
+        </div>
       </Link>
     </animated.div>
   )
@@ -405,4 +442,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-
