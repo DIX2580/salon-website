@@ -28,7 +28,7 @@ function PaymentRequiredPage() {
 
   const handleContactSupport = () => {
     // Redirect to contact or support page
-    window.location.href = 'mailto:billing@yourcompany.com' // Replace with your support email
+    window.location.href = 'mailto: dibyanjayapanda25@gmail.com' // Replace with your support email
   }
 
   return (
